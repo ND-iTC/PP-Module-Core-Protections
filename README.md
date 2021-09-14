@@ -1,2 +1,2 @@
-# Core-Protections-PP-Module
+# PP-Module-Core-Protections
 Core Protections working group document repository
