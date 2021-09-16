@@ -1,0 +1,624 @@
+== Supporting Document Mandatory Technical Document
+
+image:extracted-media/media/image1.jpeg[image,width=238,height=189]
+
+PP-Module for Core Protections Version: 0.6
+
+2021-01-08
+
+=== National Information Assurance Partnership
+
+Foreword
+
+This is a Supporting Document (SD), intended to complement the Common Criteria version 3 and the associated Common Evaluation Methodology for Information Technology Security Evaluation.
+
+SDs may be “Guidance Documents”, that highlight specific approaches and application of the standard to areas where no mutual recognition of its application is required, and as such, are not of normative nature, or “Mandatory Technical Documents”, whose application is mandatory for evaluations whose scope is covered by that of the SD. The usage of the latter class is not only mandatory, but certificates issued as a result of their application are recognized under the CCRA.
+
+=== Technical Editor:
+
+National Information Assurance Partnership (NIAP)
+
+=== Document history:
+
+[width="100%",cols="36%,36%,28%",options="header",]
+|===
+|Version |Date |Note
+|0.1 |03-19-2020 |Initial Draft
+|0.2 |05-20-2020 |Revision for release to WG
+|0.3 |08-06-2020 |Revision based upon comments
+|0.4 |10-08-2020 |Revision to incorporate cryptographic requirements
+|0.5 |10-15-2020 |Final revisions prior to release for comments
+|0.6 |1-8-2021 |Revisions for release
+|===
+
+=== General Purpose:
+
+The purpose of this SD is to define evaluation methods for the functional behavior of products.
+
+=== Acknowledgements:
+
+This SD was developed with support from NIAP Technical Community members, with representatives from industry, Government agencies, Common Criteria Test Laboratories, and members of academia.
+
+== Table of Contents
+
+link:#supporting-document-mandatory-technical-document[1 Supporting Document Mandatory Technical Document 1]
+
+link:#_Toc53680856[Table of Contents 3]
+
+link:#introduction[2 Introduction 5]
+
+link:#technology-area-and-scope-of-supporting-document[2.1 Technology Area and Scope of Supporting Document 5]
+
+link:#structure-of-the-document[2.2 Structure of the Document 5]
+
+link:#terms[2.3 Terms 5]
+
+link:#technical-terms[2.3.1 Technical Terms 5]
+
+link:#acronyms[2.3.2 Acronyms 6]
+
+link:#evaluation-activities-for-sfrs[3 Evaluation Activities for SFRs 7]
+
+link:#evaluation-activities-for-mandatory-sfrs[3.1 Evaluation Activities for Mandatory SFRs 7]
+
+link:#ndcpp-evaluation-activities[3.1.1 NDcPP Evaluation Activities 7]
+
+link:#toe-sfr-evaluation-activities[3.1.2 TOE SFR Evaluation Activities 7]
+
+link:#evaluation-activities-for-optional-sfrs[4 Evaluation Activities for Optional SFRs 10]
+
+link:#security-audit-fau[4.1 Security Audit (FAU) 10]
+
+link:#fau_drm_ext.1-debug-and-recovery-audit-mechanisms[4.1.1 FAU_DRM_EXT.1 Debug and Recovery Audit Mechanisms 10]
+
+link:#protection-of-the-tsf-fpt-1[4.2 Protection of the TSF (FPT) 10]
+
+link:#fpt_sbt_ext.1-secure-boot[4.2.1 FPT_SBT_EXT.1 Secure Boot 10]
+
+link:#fpt_vct_ext.1-vendor-configuration-tool[4.2.2 FPT_VCT_EXT.1 Vendor Configuration Tool 11]
+
+link:#trusted-pathchannels-ftp-2[4.3 Trusted Path/Channels (FTP) 12]
+
+link:#separate-trusted-path-fpt_trp_ext.3[4.3.1 Separate Trusted Path FPT_TRP_EXT.3 12]
+
+link:#evaluation-activities-for-selection-based-sfrs[5 Evaluation Activities for Selection-Based SFRs 13]
+
+link:#cryptographic-support-fcs[5.1 Cryptographic Support (FCS) 13]
+
+link:#ssh-server-default-configuration-fcs_sshs_ext.2[5.1.1 SSH Server Default Configuration FCS_SSHS_EXT.2 13]
+
+link:#ssh-client-default-configuration-fcs_sshc_ext.2[5.1.2 SSH Client Default Configuration FCS_SSHC_EXT.2 13]
+
+link:#tls-server-default-configuration-fcs_-tlss_ext.3[5.1.3 TLS Server Default Configuration FCS_ TLSS_EXT.3 14]
+
+link:#tls-client-default-configuration-fcs_-tlsc_ext.3[5.1.4 TLS Client Default Configuration FCS_ TLSC_EXT.3 14]
+
+link:#ipsec-default-configuration-fcs_ipsec_ext.3[5.1.5 IPsec Default Configuration FCS_IPSEC_EXT.3 15]
+
+link:#identification-and-authentication-fia-1[5.2 Identification and Authentication (FIA) 15]
+
+link:#password-defaults-fia_pmg_ext.2[5.2.1 Password Defaults FIA_PMG_EXT.2 15]
+
+link:#evaluation-activities-for-objective-sfrs[6 Evaluation Activities for Objective SFRs 17]
+
+link:#vulnerability-analysis[7 Vulnerability Analysis 18]
+
+link:#sources-of-vulnerability-information[7.1 Sources of Vulnerability Information 18]
+
+link:#type-1-hypotheses-public-vulnerability-based[7.1.1 Type 1 Hypotheses – Public-Vulnerability-Based 18]
+
+link:#type-2-hypotheses-itc-sourced[7.1.2 Type 2 Hypotheses – iTC-Sourced 18]
+
+link:#type-3-hypotheses-evaluation-team-generated[7.1.3 Type 3 Hypotheses – Evaluation-Team-Generated 18]
+
+link:#type-4-hypotheses-tool-generated[7.1.4 Type 4 Hypotheses – Tool-Generated 18]
+
+link:#process-for-evaluator-vulnerability-analysis[7.2 Process for Evaluator Vulnerability Analysis 19]
+
+link:#reporting[7.3 Reporting 19]
+
+link:#additional-public-vulnerability-sources[7.4 Additional Public Vulnerability Sources 19]
+
+link:#additional-flaw-hypotheses[7.5 Additional Flaw Hypotheses 19]
+
+link:#required-supplementary-information[8 Required Supplementary Information 20]
+
+== 
+
+== Introduction
+
+=== Technology Area and Scope of Supporting Document
+
+This PP-Module defines requirements for the evaluation of the Core Protections in addition to the requirements of the Base-PP which specifies requirements on network devices in general. These Core Protections includes Address Space Layout Randomization (ASLR), Data Execution Prevention (DEP), Stack Protection, Password Defaults, Default Administrator Privileges, Separate Trusted Path, and Automatic Updates by Default. These protections ensure that the TOE provides a ‘Secure by Default’ approach to Security.
+
+The PP-Module is intended for use with the following Base-PPs:
+
+* collaborative Protection Profile for Network Devices, v2.2E
+
+This SD is mandatory for evaluations of TOEs that claim conformance to a PP-Configuration that includes the PP-Module for Core Protections, Version 2.2E. Although Evaluation Activities are defined mainly for the evaluators to follow, in general they also help Developers to prepare for evaluation by identifying specific requirements for their TOE. The specific requirements in Evaluation Activities may in some cases clarify the meaning of Security Functional Requirements (SFR), and may identify particular requirements for the content of Security Targets (ST) (especially the TOE Summary Specification), user guidance documentation, and possibly supplementary information (e.g. for entropy analysis or cryptographic key management architecture).
+
+=== Structure of the Document
+
+Evaluation Activities can be defined for both SFRs and Security Assurance Requirements (SAR), which are themselves defined in separate sections of the SD.
+
+If any Evaluation Activity cannot be successfully completed in an evaluation then the overall verdict for the evaluation is a 'fail'. In rare cases there may be acceptable reasons why an Evaluation Activity may be modified or deemed not applicable for a particular TOE, but this must be approved by the Certification Body for the evaluation.
+
+In general, if all Evaluation Activities (for both SFRs and SARs) are successfully completed in an evaluation then it would be expected that the overall verdict for the evaluation is a ‘pass’. To reach a ‘fail’ verdict when the Evaluation Activities have been successfully completed would require a specific justification from the evaluator as to why the Evaluation Activities were not sufficient for that TOE.
+
+Similarly, at the more granular level of Assurance Components, if the Evaluation Activities for an Assurance Component and all of its related SFR Evaluation Activities are successfully completed in an evaluation then it would be expected that the verdict for the Assurance Component is a ‘pass’. To reach a ‘fail’ verdict for the Assurance Component when these Evaluation Activities have been successfully completed would require a specific justification from the evaluator as to why the Evaluation Activities were not sufficient for that TOE.
+
+=== Terms
+
+==== Technical Terms
+
+The following definitions define Technical terms used in this document:
+
+[width="100%",cols="39%,61%",options="header",]
+|===
+|Term |Meaning
+|Administrator |See Security Administrator.
+|Assurance |Grounds for confidence that a TOE meets the SFRs [CC1].
+|Security Administrator |The terms “Administrator” and “Security Administrator” are used interchangeably in this document at present.
+|Target of Evaluation |A set of software, firmware and/or hardware possibly accompanied by guidance. [CC1]
+|TOE Security Functionality (TSF) |A set consisting of all hardware, software, and firmware of the TOE that must be relied upon for the correct enforcement of the SFRs. [CC1]
+|User |See Security Administrator
+|===
+
+==== Acronyms
+
+[width="100%",cols="15%,85%",options="header",]
+|===
+|Acronym |Meaning
+|CC |Common Criteria
+|IP |Internet Protocol
+|PP |Protection Profile
+|RFC |Request for Comments
+|SFR |Security Functional Requirement
+|SPD |Security Problem Definition
+|ST |Security Target
+|TCP |Transmission Control Protocol
+|TOE |Target of Evaluation
+|TSF |TOE Security Functionality
+|UDP |User Datagram Protocol
+|===
+
+== Evaluation Activities for SFRs
+
+The EAs presented in this section capture the actions the evaluator performs to address technology specific aspects covering specific SARs (e.g. ASE_TSS.1, ADV_FSP.1, AGD_OPE.1, and ATE_IND.1) – this is in addition to the CEM work units that are performed in 6 Evaluation Activities for SARs.
+
+Regarding design descriptions (designated by the subsections labelled TSS, as well as any required supplementary material that may be treated as proprietary), the evaluator must ensure there is specific information that satisfies the EA. For findings regarding the TSS section, the evaluator’s verdicts will be associated with the CEM work unit ASE_TSS.1-1. Evaluator verdicts associated with the supplementary evidence will also be associated with ASE_TSS.1-1, since the requirement to provide such evidence is specified in ASE in the cPP.
+
+For ensuring the guidance documentation provides sufficient information for the administrators/users as it pertains to SFRs, the evaluator’s verdicts will be associated with CEM work units ADV_FSP.1-7, AGD_OPE.1-4, and AGD_OPE.1-5.
+
+Finally, the subsection labelled Tests is where the authors have determined that testing of the product in the context of the associated SFR is necessary. While the evaluator is expected to develop tests, there may be instances where it is more practical for the developer to construct tests, or where the developer may have existing tests. Therefore, it is acceptable for the evaluator to witness developer-generated tests in lieu of executing the tests. In this case, the evaluator must ensure the developer’s tests are executing both in the manner declared by the developer and as mandated by the EA. The CEM work units that are associated with the EAs specified in this section are: ATE_IND.1-3, ATE_IND.1-4, ATE_IND.1-5, ATE_IND.1-6, and ATE_IND.1-7.
+
+=== Evaluation Activities for Mandatory SFRs
+
+The EAs defined in this section are only applicable in cases where the TOE claims conformance to a PP-Configuration that includes the NDcPP.
+
+==== NDcPP Evaluation Activities
+
+===== Trusted Path/Channels (FTP)
+
+====== FTP_ITC_EXT.1 Inter-TSF Trusted Channel
+
+======= TSS
+
+_The evaluator shall examine the TSS to confirm that a description of the connection between the TOE and the remote update server is provided. This description must include information relating to the trusted communication channel used in ensuring the connection provides disclosure and detection of modification of the channel data._
+
+======= Guidance
+
+_The evaluator shall examine the guidance documentation to confirm that it describes the configuration of the update server, including configuration of the communication channel, update server credentials (if applicable), and polling period from the TOE to the update server to query for new versions (if applicable)._
+
+======= Tests
+
+_(If update server is selected within FTP_ITC_EXT.1.1) The evaluation activities specified for FTP_ITC.1 in the Supporting Document for the Base-PP shall be applied for update server communications._
+
+==== TOE SFR Evaluation Activities
+
+===== Identification and Authentication (FIA)
+
+====== FIA_PMG_EXT.2 Password Management
+
+======= TSS
+
+_None._
+
+======= Guidance
+
+_The evaluator shall examine the guidance documentation to confirm that it:_
+
+* _identifies the accounts that will need to be changed during installation_
+* _identifies the default credential used with the account_
+* _describes the process for changing the passwords on these accounts during initial configuration_
+
+_Note: It is acceptable for the account identification and password changes to be achieved by using a script or wizard supplied with the product._
+
+======= Tests
+
+_The evaluator shall carry out the following tests. For a distributed TOE the tests shall be repeated for each component._
+
+[arabic]
+. _The evaluator shall follow the operational guidance for configuration of the TOE and shall confirm that the default account credentials identified to the Security Administrator as described in the operational guidance, are required to be changed during initial configuration or first enablement of the account.._
+. _The evaluator shall perform an analysis of the TOE in its evaluated configuration and identify any default accounts through examination of the TOE interfaces and configuration which are not documented within the Security Target or Guidance documentation. If a default account is found that is not documented in the vendor documentation, this test fails._
+. _If passwords are changed during the initial configuration of the TOE, the evaluator shall follow the preparatory guidance and verify that all documented administrative accounts are prompted to change the default credentials prior to completion of the evaluated configuration. The evaluator shall verify that the passwords are compliant to FIA_PMG_EXT.1._
+. _If passwords are changed during the first authentication on a default administrative account, the evaluator shall exercise each default administrative account and verify that a prompt is provided after authentication that requires the credentials to be updated. The evaluator shall verify that the passwords are compliant to FIA_PMG_EXT.1._
+. _If passwords are changed during first initialization of an account or service, the evaluator shall invoke each service/account and verify that a prompt is provided after authentication that requires the credentials to be updated. The evaluator shall verify that the passwords are compliant to FIA_PMG_EXT.1._
+
+===== Protection of the TSF (FPT)
+
+====== FPT_AEX_EXT.1 Anti-Exploitation Capabilities
+
+======= TSS
+
+_The evaluator shall ensure that the TSS describes the compiler flags used to enable ASLR when the TOE is compiled._
+
+======= Guidance
+
+_None._
+
+======= Tests
+
+_The evaluator shall carry out the following tests. For a distributed TOE the tests shall be repeated for each component._
+
+[arabic]
+. _The evaluator shall perform a static or dynamic analysis to determine that no memory mappings are placed at an explicit and consistent address. The method of doing so varies per platform._
+. _The evaluator shall verify that no memory mapping requests are made with write and execute permissions. The method of doing so varies per platform._
+
+====== FPT_TUD_EXT.3 Automatic Update Management
+
+======= TSS
+
+_None._
+
+======= Guidance
+
+_The evaluator shall examine the guidance documentation to confirm that it describes the configuration of update options and explains that at the end of installation the product is configured to perform queries to an update server periodically._
+
+======= Tests
+
+_The evaluator shall carry out the following tests. For a distributed TOE the tests shall be repeated for each component._
+
+[arabic]
+. _(Optional) If configuration of a polling interval is provided by the TOE, the evaluator shall verify that at the configured time interval, the TOE will establish a connection with the update server to query for updates. The evaluator shall verify that the communication between the TOE and update server is secured as defined in FTP_ITC_EXT.1 and an audit is logged to record the connection._
+. _The evaluator shall wait the identified polling time interval and ensure that the TOE requests information from the update server pertaining to new firmware/software releases. If the polling interval is configurable, the evaluator shall set the upper and lower limits …_
+. _(Optional) If manual querying of the update server by the TOE is provided, the evaluator shall follow the operational guidance for the TOE to perform a manual query of the update server. The evaluator shall verify that the communication between the TOE and update server is secured as defined in FTP_ITC_EXT.1 and an audit is logged to record the connection._
+. _The evaluator shall place a valid update image on the update server. The evaluator shall verify, based upon the selection made in FPT_TUD_EXT.3.2, that the image can either be manually downloaded by a Security Administrator or automatically downloaded by the TOE. The evaluator verifies that the TOE update firmware/software can either be installed manually by the Security Administrator or is installed automatically by the TOE following the download (if selected)._
+
+===== Trusted Path/Channels (FTP)
+
+====== FTP_TRP_EXT.2 Trusted Path Protected by Default
+
+======= TSS
+
+_None._
+
+======= Guidance
+
+_The evaluator shall examine the guidance documentation to confirm that it identifies and describes the configuration of the administration interfaces, and states that by default all administration interfaces are cryptographically protected using one (or more) of the protocols selected in FTP_TRP.1/Admin._
+
+======= Tests
+
+_The evaluator shall carry out the following tests. For a distributed TOE the tests shall be repeated for each component._
+
+[arabic]
+. _The evaluator shall follow the operational guidance for configuration of the administration interfaces and shall confirm that, by default after installation, unprotected connections for management activities cannot be made._
+. _The evaluator shall exercise the TOE management interface(s) and verify that the TOE can be access when using the interface configured with an access control list that permits the traffic. The evaluator shall then attempt to connect to the TOE management interface(s) and verify that the TOE cannot be accessed when using the interface if an ACL is not configured to permit the connection._
+
+_ +
+_
+
+== Evaluation Activities for Optional SFRs
+
+=== Security Audit (FAU)
+
+==== FAU_DRM_EXT.1 Debug and Recovery Audit Mechanisms
+
+===== TSS
+
+_None._
+
+===== Guidance
+
+_The evaluator will examine the operational guidance to ensure that the TOE by default or through configuration will generate an auditable event on the occurrence of invocation of the debug_ _interface._
+
+===== Tests
+
+_The evaluator shall carry out the following tests. For a distributed TOE the tests shall be repeated for each component._
+
+[arabic]
+. _The evaluator shall attempt to establish a connection to the debug interface for the TOE with an authorized user account. The evaluator shall verify that the attempt is successful and an auditable event is generated that includes the user within the record._
+. _The evaluator shall attempt to establish a connection to the debug interface for the TOE with an unauthorized user account. The evaluator shall verify that the attempt is unsuccessful and an auditable event is generated that includes the user within the record._
+
+=== Protection of the TSF (FPT)
+
+==== FPT_SBT_EXT.1 Secure Boot
+
+===== TSS
+
+_The evaluator shall verify that the TSS describes the digital signature hash-based message authentication verification or performed by the TOE at boot._
+
+_Application Note: Due to the proprietary nature of this information, the vendor may provide the information pertaining to the root of trust in a separate document. This document must be provided for review to the evaluation lab and the scheme for review but will not be posted on the approved products list page._
+
+===== Guidance
+
+_The evaluator shall examine the guidance documentation and verify that procedures are provided on the remediation of a secure boot failure._
+
+_*Application Note:* Acceptable actions for remediation of the device include reverting to a previous TOE image, reinstalling the TOE, performing a factory reset of the TOE, or contacting vendor support for assistance._
+
+===== Tests
+
+_The evaluator shall carry out the following tests. For a distributed TOE the tests shall be repeated for each component._
+
+[arabic]
+. _During initial boot of the TOE, the evaluator shall review the initialization output or audited events and verify that the TOE successfully performs a digital signature or hash-based verification of the firmware/software._
+. _The evaluator shall attempt to boot the TOE using firmware/software with an invalid digital signature or hash-based verification and verify that the verification check fails and the TOE halts initialization._
+. _The evaluator shall attempt to boot the TOE using an invalid firmware image and verify that upon failure, the TOE performs the action selected within FPT_SBT_EXT.1.2._
+. _If ‘revert to previous TOE image’ is selected, the evaluator, following a failed boot attempt, shall review the guidance documentation and perform the actions and confirm that the TOE returns to an operational state following the remediation action._
+. _If ‘boot into single user mode’ is selected, the evaluator, following a failed boot attempt, shall review the guidance documentation and perform the actions and confirm that the TOE returns to an operational state following the remediation action._
+. _If ‘reinstall TOE’ is selected, the evaluator, following a failed boot attempt, shall review the guidance documentation and perform the actions and confirm that the TOE returns to an operational state following the remediation action._
+. _If ‘factory reset’ is selected, the evaluator, following a failed boot attempt, shall review the guidance documentation and perform the actions and confirm that the TOE returns to an operational state following the remediation action. The vendor must also ensure that following a factory reset, the default configurations present within this PP module are still enforced._
+
+_Application Note: If ‘contact vendor support’ is selected, the evaluator may work directly with the vendor point of contact for the evaluation to exercise the guidance actions. An actual ticket is not required to be generated and submitted on the vendor support page._
+
+==== FPT_VCT_EXT.1 Vendor Configuration Tool
+
+===== TSS
+
+_The evaluator shall verify that the TSS describes the vendor configuration tool and the method and interface through which it is invoked_.
+
+_The evaluator shall verify that the TSS describes the scope of the vendor configuration tool and explicitly lists which SFRs are configured through this tool_.
+
+_Application Note: It is not a requirement for the entirety of the TOE configuration to be performed through the configuration tool. However, it must be clearly documented within the TSS or operational guidance regarding which SFRs are included or excluded from the tool._
+
+===== Guidance
+
+_The evaluator shall verify that operational guidance documents whether the vendor configuration tool is performed through a script or wizard._
+
+_If the configuration tool is provided as a wizard, the evaluator shall verify that the operational guidance provides instructions to the Security Administrator documenting which interface can be used for use of the wizard as well as each step taken to complete the initial configuration of the TOE._
+
+_If the configuration tool is provides as a script, the evaluator shall verify that the operational guidance provides instructions to the Security Administrator documenting which interface can be used for execution of the script as well as the prefix (if applicable) that must be used through command line to trigger the script execution._
+
+_The evaluator shall verify that the operational guidance documents each parameter that can be specified during use of the configuration tool to place the TOE in the evaluated configuration._
+
+===== Tests
+
+_The evaluator shall carry out the following tests. For a distributed TOE the tests shall be repeated for each component._
+
+[arabic]
+. _If the vendor configuration tool is provided as a script, the evaluator shall follow the operational guidance and execute the script through the documented interface. The evaluator shall demonstrate each parameter available and verify that upon completion of the script the TOE is in the evaluated configuration._
+. _If the vendor configuration tool is provided as a wizard, the evaluator shall follow the operational guidance and complete the wizard process. The evaluator shall demonstrate each parameter available and verify that upon completion of the script the TOE is in the evaluated configuration._
+. _The evaluator, following execution of the vendor configuration tool, shall perform a subset of the requirements documented within the Base-PP and verify that the TOE is compliant to the SFRs._
+
+_Application Note: The subset of requirements to be tested shall be based upon the list of SFRs within the AGD or TSS that are configured through use of the tool. It is not a requirement to test every SFR listed but sufficient sampling should be performed to ensure that the TOE is compliant. It is recommended that the evaluator run the configuration tool prior to execution of the other TOE SFRs to simplify this process._
+
+=== Trusted Path/Channels (FTP)
+
+==== Separate Trusted Path FPT_TRP_EXT.3
+
+===== TSS
+
+_None._
+
+===== Guidance
+
+_The evaluator shall examine the guidance documentation to confirm that it identifies and describes the configuration of the administration interfaces, and states that by default all administration interfaces are cryptographically protected using one (or more) of the protocols selected in FTP_TRP.1/Admin._
+
+===== Tests
+
+_The evaluator shall carry out the following tests. For a distributed TOE the tests shall be repeated for each component._
+
+[arabic]
+. _The evaluator shall follow the operational guidance for configuration of the administration interfaces and shall confirm that, by default after installation, unprotected connections for management activities cannot be made._
+
+_ +
+_
+
+== Evaluation Activities for Selection-Based SFRs
+
+=== Cryptographic Support (FCS)
+
+==== SSH Server Default Configuration FCS_SSHS_EXT.2
+
+===== TSS
+
+_The evaluator shall examine the TSS and verify that it describes the state at which the replacement of default host keys_
+
+===== Guidance
+
+*FCS_SSHS_EXT.2.1*
+
+_The evaluator shall examine the guidance documentation and ensure that no procedures are required to be compliant with FCS_SSHS_EXT.1. If any configuration steps are required to restrict the encryption algorithms, MAC algorithms, public-key algorithms, key exchange methods, or rekeying intervals in order to gain compliance, this requirement fails._
+
+*FCS_SSHS_EXT.2.2*
+
+_The evaluator shall examine the guidance documentation and ensure information is provided on when the regeneration of host keys is performed._
+
+===== Tests
+
+_The evaluator shall carry out the following tests. For a distributed TOE the tests shall be repeated for each component._
+
+[arabic]
+. _The evaluator shall follow the preparatory guidance and prior to any configuration of the SSH server interface attempt to establish a connection using an unsupported cryptographic algorithm. The evaluator shall verify that the connection fails._
+. _The evaluator shall follow the preparatory guidance and prior to any configuration of the SSH server interface attempt to establish a connection using an unsupported hash. The evaluator shall verify that the connection fails._
+. _The evaluator shall follow the preparatory guidance and prior to any configuration of the SSH server interface attempt to establish a connection using an unsupported Diffie Hellman group. The evaluator shall verify that the connection fails._
+. _The evaluator shall follow the preparatory guidance and prior to any configuration of the SSH server interface attempt to establish a connection using an unsupported public key. The evaluator shall verify that the connection fails._
+. _The evaluator shall follow the preparatory guidance and verify that the TOE prompts the security administrator to regenerate a new host key._
+
+*FCS_SSHS_EXT.2.1*
+
+_None._
+
+*FCS_SSHS_EXT.2.2*
+
+_The evaluator shall examine the guidance documentation and ensure that no procedures are required to be compliant with FCS_SSHS_EXT.1. If any configuration steps are required to restrict the encryption algorithms, MAC algorithms, public-key algorithms, key exchange methods, or rekeying intervals in order to gain compliance, this requirement fails._
+
+==== SSH Client Default Configuration FCS_SSHC_EXT.2
+
+===== TSS
+
+_The evaluator shall examine the TSS and verify that it describes each account present on the TOE that is enabled in the evaluated configuration._
+
+===== Guidance
+
+_The evaluator shall examine the guidance documentation and ensure that no procedures are required to be compliant with FCS_SSHC_EXT.1. If any configuration steps are required to restrict the encryption algorithms, MAC algorithms, public-key algorithms, key exchange methods, or rekeying intervals in order to gain compliance, this requirement fails._
+
+===== Tests
+
+_The evaluator shall carry out the following tests. For a distributed TOE the tests shall be repeated for each component._
+
+[arabic]
+. _The evaluator shall follow the preparatory guidance and prior to any configuration of the SSH client interface attempt to establish a connection to an SSH server that is using an unsupported cryptographic algorithm. The evaluator shall verify that the connection fails._
+. _The evaluator shall follow the preparatory guidance and prior to any configuration of the SSH client interface attempt to establish a connection to an SSH server that is using an unsupported hash. The evaluator shall verify that the connection fails._
+. _The evaluator shall follow the preparatory guidance and prior to any configuration of the SSH client interface attempt to establish a connection to an SSH server that is using an unsupported Diffie Hellman group. The evaluator shall verify that the connection fails._
+. _The evaluator shall follow the preparatory guidance and prior to any configuration of the SSH client interface attempt to establish a connection to an SSH server that is using an unsupported public key. The evaluator shall verify that the connection fails._
+
+==== TLS Server Default Configuration FCS_ TLSS_EXT.3
+
+===== TSS
+
+_The evaluator shall examine the TSS and verify that it describes each account present on the TOE that is enabled in the evaluated configuration._
+
+===== Guidance
+
+_The evaluator._
+
+===== Tests
+
+_The evaluator shall carry out the following tests. For a distributed TOE the tests shall be repeated for each component._
+
+[arabic]
+. _The evaluator shall follow the preparatory guidance and prior to any configuration of the TLS server interface attempt to establish a connection using an unsupported cipher suite. The evaluator shall verify that the connection fails._
+. _The evaluator shall follow the preparatory guidance and prior to any configuration of the TLS server interface attempt to establish a connection using an unsupported SSL or TLS version. The evaluator shall verify that the connection fails._
+. _The evaluator shall follow the preparatory guidance and verify that the TOE prompts the security administrator to generate and install a new server certificate._
+
+==== TLS Client Default Configuration FCS_ TLSC_EXT.3
+
+===== TSS
+
+_The evaluator shall examine the TSS and verify that it describes each account present on the TOE that is enabled in the evaluated configuration._
+
+===== Guidance
+
+_The evaluator._
+
+===== Tests
+
+_The evaluator shall carry out the following tests. For a distributed TOE the tests shall be repeated for each component._
+
+[arabic]
+. _The evaluator shall follow the preparatory guidance and prior to any configuration of the TLS server interface attempt to establish a connection to a TLS server that is using an unsupported cipher suite. The evaluator shall verify that the connection fails._
+. _The evaluator shall follow the preparatory guidance and prior to any configuration of the TLS server interface attempt to establish a connection to a TLS server that is using an unsupported SSL or TLS version. The evaluator shall verify that the connection fails._
+
+==== IPsec Default Configuration FCS_IPSEC_EXT.3
+
+===== TSS
+
+_The evaluator shall examine the TSS and verify that it describes each account present on the TOE that is enabled in the evaluated configuration._
+
+===== Guidance
+
+_The evaluator._
+
+===== Tests
+
+_The evaluator shall carry out the following tests. For a distributed TOE the tests shall be repeated for each component._
+
+[arabic, start=3]
+. _The evaluator shall review the default TOE configuration and ensure that all provided default IPsec policies do not contain unsupported of disallowed algorithms, hashes, of Diffie Hellman groups. The preparatory guidance must provide guidance on how to change these policies if present. This test fails is the policies cannot be updated or disabled to be compliant to the base protection profile requirements._
+. _If pre-shared keys are implemented by the TOE, the evaluator shall review the TOE default configuration and ensure that all pre-shared keys present in default policies are compliant to FIA_PSK_EXT.1 in the base protection profile._
+. _If certificate-based authentication is present on the TOE, the evaluator shall review the TOE default configuration and ensure that the certificates are compliant to FIA_X509_EXT.1/Rev in the base protection profile. The evaluator must also generate a new certificate and verify the policy can be updated to use the new certificate._
+
+=== Identification and Authentication (FIA)
+
+==== Password Defaults FIA_PMG_EXT.2
+
+===== TSS
+
+_The evaluator shall examine the TSS and verify that it describes each account present on the TOE that is enabled in the evaluated configuration._
+
+===== Guidance
+
+_The evaluator shall verify that the operational guidance, in the installation procedures, documents the step within the initial configuration that calls for the Security Administrator to update the account passwords present on the TOE._
+
+_If the TOE allows for enabling or disabling of accounts, the evaluator shall verify that the operational guidance provides the appropriate steps to enable or disable any account which is not required for use in the evaluated configuration._
+
+===== Tests
+
+_The evaluator shall carry out the following tests. For a distributed TOE the tests shall be repeated for each component._
+
+[arabic, start=6]
+. _The evaluator shall follow the procedures documented within the operational guidance for initial configuration of the TOE upon delivery and verify that during initial setup the administrator is prompted to update the password for each documented account._
+
+_Application Note: It is not a requirement for the TOE to automatically enforce a password policy during initialization of the TOE as the configuration of the policy may occur after this step. However, it is the responsibility of the security administrator to configure a password that is within the scope of the allowed password policy documented in the Base-PP._
+
+== Evaluation Activities for Objective SFRs
+
+There are no objective requirements within the PP-Module.
+
+== Vulnerability Analysis
+
+[SD-ND] contains the details of the vulnerability analysis process to be followed; that information is not repeated here. The additional information that is needed for vulnerability analysis for TOEs conforming to [MOD-CP] is contained in the following sections.
+
+=== Sources of Vulnerability Information
+
+[SD-ND] identifies the 4 types of flaws to be considered by the evaluation team. For each type, the following additional information is provided for TOEs conforming to [MOD-CP].
+
+==== Type 1 Hypotheses – Public-Vulnerability-Based
+
+The list of public sources of vulnerability information selected by the iTC is given in Section A.4 of [SD-ND]. Any additional sources specifically for firewalls will be specified in chapter A.4 of this document.
+
+The evaluators shall perform a search on the sources listed in Section A.4 of [SD-ND] to determine a list of potential flaw hypotheses that are more recent that the publication date of the PP-Module, and those that are specific to the TOE and its components as specified by the additional documentation mentioned above. Any duplicates – either in a specific entry, or in the flaw hypothesis that is generated from an entry from the same or a different source – can be noted and removed from consideration by the evaluation team.
+
+The search criteria to be used when searching the sources published after the publication date of the cPP shall include:
+
+* The term “firewall”
+* The following protocols: TCP, UDP, IPv4, IPv6
+* Any protocols not listed above supported (through an SFR) by the TOE.
+* The TOE name (including appropriate model information as appropriate)
+
+As part of type 1 flaw hypothesis generation for the specific components of the TOE, the evaluator shall also search the component manufacturer’s websites to determine if flaw hypotheses can be generated on this basis (for instance, if security patches have been released for the version of the component being evaluated, the subject of those patches may form the basis for a flaw hypothesis).
+
+==== Type 2 Hypotheses – iTC-Sourced
+
+Section A.5 of [SD-ND] contains the list of flaw hypothesis generated by the iTC for this technology that must be considered by the evaluation team as flaw hypotheses in performing the vulnerability assessment. Section A.5 of this document contains additional flaw hypothesis generated by the iTC specifically for firewalls.
+
+If the evaluators discover a Type 3 or Type 4 flaw that they believe should be considered as a Type 2 flaw in future versions of this PP-Module, they should work with their Certification Body to determine the appropriate means of submitting the flaw for consideration by the iTC.
+
+==== Type 3 Hypotheses – Evaluation-Team-Generated
+
+Type 3 flaws are formulated by the evaluator based on information presented by the product (through on-line help, product documentation and user guides, etc.) and product behaviour during the (functional) testing activities. The evaluator is also free to formulate flaws that are based on material that is not part of the baseline evidence (e.g., information gleaned from an Internet mailing list, or reading interface documentation on interfaces not included in the set provided by the developer), although such activities have the potential to vary significantly based upon the product and evaluation facility performing the analysis.
+
+If the evaluators discover a Type 3 flaw that they believe should be considered as a Type 2 flaw in future versions of this PP-Module, they should work with their Certification Body to determine the appropriate means of submitting the flaw for consideration by the iTC.
+
+==== Type 4 Hypotheses – Tool-Generated
+
+There are no Type 4 hypotheses that apply to the TOE beyond those defined by [SD-ND].
+
+If the evaluators discover a Type 4 flaw that they believe should be considered as a Type 2 flaw in future versions of this PP-Module, they should work with their Certification Body to determine the appropriate means of submitting the flaw for consideration by the iTC.
+
+=== Process for Evaluator Vulnerability Analysis
+
+The process to be followed is described in [SD-ND].
+
+=== Reporting
+
+Reporting activities are described in [SD-ND].
+
+=== Additional Public Vulnerability Sources
+
+[SD-ND] identifies the relevant public vulnerability sources to be consulted. There are no additional public vulnerability sources identified specifically for firewalls
+
+=== Additional Flaw Hypotheses
+
+The following additional tests shall be performed:
+
+[arabic]
+. The evaluator shall perform a review of the vendor-provided guidance documentation as well as a public search for all identified built-in administrative accounts. These accounts include service accounts, disaster recovery accounts, developer interfaces, debug accounts, and APIs which are able to configure the TOE or read security-sensitive information from the TOE. The evaluator shall attempt to invoke each interface or access each identified account and determine that all methods to access the TOE are restricted with the appropriate user authentication credentials defined under FIA_PMG_EXT.1 in the base PP.
+. The evaluator shall authenticate to the TOE with an authorized administrative account and using the guidance documentation verify that all accounts defined within the documentation are present on the TOE. The evaluator shall then verify that all account credentials are compliant to the password complexity requirements. For those credentials that are non-compliant, the evaluator shall verify that the credentials can either be configured to meet the requirement or be disabled.
+. The evaluator shall attempt one of the privileged actions that is identified in operational guidance as not being available by default, without performing the relevant additional action to perform the command and shall confirm that the action is not carried out. (If the TOE does not provide an environment in which such an attempt can be made then the evaluator shall report this and explain why it is not possible. An example of such a situation might be where actions can only be carried out by selection from an offered menu rather than by entering commands over a command line interface.)
+. {blank}
+
+== Required Supplementary Information
+
+This Supporting Document has no required supplementary information beyond the ST, operational guidance, and testing.
