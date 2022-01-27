@@ -1,6 +1,6 @@
-Version 0.5
+Version 0.6
 
-October 2020
+January 2022
 
 == Acknowledgements
 
